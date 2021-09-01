@@ -239,7 +239,7 @@ ourApp.delete("/author/delete/:isbn/:id", (req, res)=>{
         return book;
     });
 
-// to delete the book isbn from athor books also
+// to delete the book isbn from athour books also
 
      Database.author.forEach((auth) => {
          if (auth.id === parseInt(id)){
@@ -256,6 +256,71 @@ ourApp.delete("/author/delete/:isbn/:id", (req, res)=>{
 
 })
 
+// Route         = /author/delete/:id
+// Description  = delete an author completely
+// Access       = Public
+// Method       = DELETE
+// params       = ID 
+// Body         = none
+
+ourApp.delete("/author/delete/:id", (req, res)=>{
+    const { id } = req.params;
+
+    const fileteredAuthor = Database.author.filter((auth) => auth.id !== parseInt(id));
+
+    Database.author = fileteredAuthor;
+
+    return res.json(Database.author);
+})
+
+// Route         = /publication/delete/:id
+// Description  = delete an publication completely
+// Access       = Public
+// Method       = DELETE
+// params       = ID
+// Body         = none
+
+ourApp.delete("/publication/delete/:id", (req, res)=> {
+    const { id } = req.params;
+
+    const filteredPub = Database.publication.filter((pub)=> pub.id !== parseInt(id));
+
+    Database.publication = filteredPub;
+
+    return res.json(Database.publication);
+})
+
+// Route         = /publication/book/delete/:isbn/:id
+// Description  = delete an publication from a book
+// Access       = Public
+// Method       = DELETE
+// params       = ISBN, ID
+// Body         = none
+
+ourApp.delete("/publication/book/delete/:isbn/:id", (req, res) => {
+    const { isbn, id } = req.params;
+
+    Database.Book.forEach((bukki) => {
+        if(bukki.ISBN == isbn){
+            bukki.publication = 0;
+            return bukki;
+        }
+        return bukki;
+    });
+    Database.publication.forEach((pub)=> {
+        if ( pub.id === parseInt(id)){
+            const filteredpubwithbook = Database.publication.filter((pubsub)=> pubsub !== isbn);  
+            
+            Database.publication = filteredpubwithbook;
+
+            return pub;
+        }
+        return pub;
+
+    });
+     
+    return res.json({Books: Database.Book, publications: Database.publication});
+});
 
 
 ourApp.listen(4000, ()=>console.log("server is running")); 
