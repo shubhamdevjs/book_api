@@ -6,9 +6,12 @@ const express= require("express");
 
 const mongoose = require("mongoose");
 
-const { Book } = require("./database");
-const ourApp= express();
+const { ABC } = require("./database");
+const ourApp= express(); 
 
+const Book = require('./schema/book');
+const author = require("./schema/author");
+const publication = require("./schema/publication");
 
 mongoose.connect(process.env.MONGO_URI,{
     useNewUrlParser: true,
@@ -91,13 +94,15 @@ ourApp.get("/author",(request,response) => {
 // Method       = POST
 // params       = none 
 // Body         = none
-ourApp.post("/book/new",(request,response)=>{
+ourApp.post("/book/new", async(request,response)=>{
+    try{
     const {newBook} = request.body;
-    //Pushing the changes to the variable
-    Database.Book.push(newBook);
-
-    return response.json(Database.Book);
-}) ;
+    await Book.create(newBook);
+    return response.json({message: "book added successfully"});
+    }catch(error){
+        return response.json({message: error.message});
+    }
+}); 
 
 // Route         = /author/new
 // Description  = to add new author
