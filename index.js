@@ -1,33 +1,34 @@
 require("dotenv").config();
-
-const { request, response, urlencoded } = require("express");
-
 const express= require("express");
-
 const mongoose = require("mongoose");
+// const { request, response, urlencoded } = require("express");
 
-const { ABC } = require("./database");
+// const { ABC } = require("./database");
 const ourApp= express(); 
 
-const Book = require('./schema/book');
-const author = require("./schema/author");
-const publication = require("./schema/publication");
+const Book = require("./API/book");
+const Author = require("./API/author");
+const Publication = require("./API/publication");
 
 mongoose.connect(process.env.MONGO_URI,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // useFindAndModify: false,
     // useCreateIndex: true,
-    }
+}
 )
 .then(()=> console.log("connection established!"))
 .catch((err)=> console.log(err));
 
-
-
 ourApp.use(express.json());
 
-const Database=require("./database")
+// ourApp.use("/books", Book );
+// ourApp.use("/authors", Author );
+// ourApp.use("/publications", Publication );  
+
+ 
+
+// const Database=require("./database")
 
 
 ourApp.get("/", (request,response)=>{
